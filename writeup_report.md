@@ -1,47 +1,30 @@
 # **Finding Lane Lines on the Road** 
-
-## Writeup Template
-
-### You can use this file as a template for your writeup if you want to submit it as a markdown file. But feel free to use some other method and submit a pdf if you prefer.
-
----
-
-**Finding Lane Lines on the Road**
-
-The goals / steps of this project are the following:
-* Make a pipeline that finds lane lines on the road
-* Reflect on your work in a written report
-
-
-[//]: # (Image References)
-
-[image1]: ./examples/grayscale.jpg "Grayscale"
-
 ---
 
 ### Reflection
 
-### 1. Describe your pipeline. As part of the description, explain how you modified the draw_lines() function.
+### 1. Describe your pipeline. As part of the description, explain how you modified the draw\_lines() function.
 
-My pipeline consisted of 5 steps. First, I converted the images to grayscale, then I .... 
+**My pipeline consisted of 6 steps**:
 
-In order to draw a single line on the left and right lanes, I modified the draw_lines() function by ...
+1. Converting the image to Greyscale.
+2. Perform Gaussian Blurring on the Greyscale image.
+3. Perform Canny Edge Detection after defining suitable low and high thresholds. I took John Canny's advice and made the ratio 1:2 .
+4. Draw the polygon to corner down the area of interest in the image.
+5. Define Hough Transform Parameters and Call its interface.
+6. Draw resulting Hough Lines on the original image.
 
-If you'd like to include images to show how the pipeline works, here is how to include an image: 
+I combined my Pipeline in an interface/method called **pipeline\_interface()** so that it can be easily called to process both separate images and the videos without the overhead effort of tracking changes.
 
-![alt text][image1]
+In order to draw a single line on the left and right lanes, I saved the old one as **draw\_lines\_original()** and modified the **draw\_lines()** function by creating an array of slopes and intercepts of the lines outputted by Hough Transform. Then I clustered highest and lowest slopes (supposedly left and right lines segments' slopes), then by averaging these slopes respectively, I could find one line for the left side and one line for right side, thusfar achieving what was requested.
+
 
 
 ### 2. Identify potential shortcomings with your current pipeline
 
-
-One potential shortcoming would be what would happen when ... 
-
-Another shortcoming could be ...
+The created left and right lines are still pretty much unstable. If a higher slope line appears (higher than the left lane line), the drawn left line will jump to it.
 
 
 ### 3. Suggest possible improvements to your pipeline
 
-A possible improvement would be to ...
-
-Another potential improvement could be to ...
+They need to be stabilized and consider lane width and position respective to the detection camera.
